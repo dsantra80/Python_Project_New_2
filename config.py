@@ -4,5 +4,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    MAX_TOKENS = int(os.getenv('MAX_TOKENS', 256))
-    TEMPERATURE = float(os.getenv('TEMPERATURE', 0.6))
+    MODEL_PATH = os.getenv('MODEL_PATH', 'openlm-research/open_llama_3b')
+    MAX_TOKENS = int(os.getenv('MAX_TOKENS', 32))
+    TEMPERATURE = float(os.getenv('TEMPERATURE', 0.7))
