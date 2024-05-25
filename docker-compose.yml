@@ -5,7 +5,9 @@ services:
     build: .
     ports:
       - "5000:5000"
+    environment:
+      - MAX_TOKENS=${MAX_TOKENS}
+      - TEMPERATURE=${TEMPERATURE}
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
     env_file:
       - .env
-    volumes:
-      - .:/app
