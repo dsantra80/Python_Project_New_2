@@ -29,7 +29,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
           build-args:
-            HF_AUTH_TOKEN: ${{ secrets.HF_AUTH_TOKEN }}
+            HF_AUTH_TOKEN=${{ secrets.HF_AUTH_TOKEN }}
 
       - name: Deploy with Docker Compose
         run: docker-compose up -d
