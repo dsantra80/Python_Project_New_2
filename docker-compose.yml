@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        HF_AUTH_TOKEN: ${HUGGINGFACE_TOKEN}
     ports:
       - "5000:5000"
     environment:
