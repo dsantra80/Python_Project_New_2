@@ -4,3 +4,4 @@ torch
 python-dotenv
 sentencepiece
 accelerate
+protobuf
