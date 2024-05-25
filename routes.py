@@ -1,50 +1,26 @@
 from flask import request, jsonify
-import transformers
 import torch
-import os
-
-model_id = "meta-llama/Meta-Llama-3-70B-Instruct"
-hf_auth_token = os.getenv('HUGGINGFACE_TOKEN')
-
-# Modified pipeline instantiation with force_download=True
-pipeline = transformers.pipeline(
-    "text-generation",
-    model=model_id,
-    model_kwargs={"torch_dtype": torch.bfloat16},
-    device_map="auto",
-    use_auth_token=hf_auth_token,
-    force_download=True  # Force a new download if necessary
-)
-
-def generate_response(messages, max_tokens, temperature):
-    prompt = pipeline.tokenizer.apply_chat_template(
-        messages, 
-        tokenize=False, 
-        add_generation_prompt=True
-    )
-
-    terminators = [
-        pipeline.tokenizer.eos_token_id,
-        pipeline.tokenizer.convert_tokens_to_ids("")
-    ]
-
-    outputs = pipeline(
-        prompt,
-        max_new_tokens=max_tokens,
-        eos_token_id=terminators,
-        do_sample=True,
-        temperature=temperature,
-        top_p=0.9,
-    )
-    return outputs[0]["generated_text"][len(prompt):]
+from transformers import LlamaTokenizer, LlamaForCausalLM
 
 def configure_routes(app):
+    model_path = app.config['MODEL_PATH']
+    tokenizer = LlamaTokenizer.from_pretrained(model_path)
+    model = LlamaForCausalLM.from_pretrained(
+        model_path, torch_dtype=torch.float16, device_map='auto',
+    )
+
     @app.route('/generate', methods=['POST'])
     def generate():
         data = request.get_json()
-        messages = data.get('messages')
+        prompt = data.get('prompt')
         max_tokens = app.config['MAX_TOKENS']
         temperature = app.config['TEMPERATURE']
-        
-        response_text = generate_response(messages, max_tokens, temperature)
+
+        input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+
+        generation_output = model.generate(
+            input_ids=input_ids, max_new_tokens=max_tokens, temperature=temperature
+        )
+        response_text = tokenizer.decode(generation_output[0])
+
         return jsonify({"response": response_text})
