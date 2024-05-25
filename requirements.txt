@@ -1,4 +1,6 @@
 Flask
-python-dotenv
 transformers
 torch
+python-dotenv
+sentencepiece
+
