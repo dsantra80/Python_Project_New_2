@@ -1,14 +1,17 @@
 from flask import request, jsonify
 import transformers
 import torch
+import os
 
 model_id = "meta-llama/Meta-Llama-3-70B-Instruct"
+hf_auth_token = os.getenv('HUGGINGFACE_TOKEN')
 
 pipeline = transformers.pipeline(
     "text-generation",
     model=model_id,
     model_kwargs={"torch_dtype": torch.bfloat16},
     device_map="auto",
+    use_auth_token=hf_auth_token
 )
 
 def generate_response(messages, max_tokens, temperature):
