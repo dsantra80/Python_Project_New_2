@@ -2,11 +2,10 @@ version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      args:
-        HF_AUTH_TOKEN: ${HUGGINGFACE_TOKEN}
+    build: .
     ports:
       - "5000:5000"
     environment:
-      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN}
+      - MODEL_PATH=${MODEL_PATH}
+      - MAX_TOKENS=${MAX_TOKENS}
+      - TEMPERATURE=${TEMPERATURE}
