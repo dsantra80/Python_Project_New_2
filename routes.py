@@ -6,12 +6,14 @@ import os
 model_id = "meta-llama/Meta-Llama-3-70B-Instruct"
 hf_auth_token = os.getenv('HUGGINGFACE_TOKEN')
 
+# Modified pipeline instantiation with force_download=True
 pipeline = transformers.pipeline(
     "text-generation",
     model=model_id,
     model_kwargs={"torch_dtype": torch.bfloat16},
     device_map="auto",
-    use_auth_token=hf_auth_token
+    use_auth_token=hf_auth_token,
+    force_download=True  # Force a new download if necessary
 )
 
 def generate_response(messages, max_tokens, temperature):
