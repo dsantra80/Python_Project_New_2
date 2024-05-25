@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['MAX_TOKENS'] = 100  # Example value, set as needed
 app.config['TEMPERATURE'] = 0.7  # Example value, set as needed
 
-local_model_path = "./Meta-Llama-3-70B-Instruct"
+local_model_path = "/usr/src/app/Meta-Llama-3-70B-Instruct"
 hf_auth_token = os.getenv('HUGGINGFACE_TOKEN')
 
 # Set up logging
@@ -78,4 +78,3 @@ configure_routes(app)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
